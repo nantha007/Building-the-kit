@@ -147,16 +147,16 @@ bool AriacOrderManager::PickAndPlaceFromConv(const std::pair<std::string,geometr
         //--task the robot to pick up this part
         ROS_INFO_STREAM("Moving to part...");
         temp_pose.position.z += 0.03;
-        // auto temp_pose_1 = part_pose;
-        // temp_pose_1.position.z += 0.015;
         arm1_.GoToTarget(temp_pose);
         while(camera_.get_break_beam_trig_counter(1)!=part_num){
             ros::spinOnce();
         }
-        if (product_type == "piston_rod_part"){
-            temp_pose.position.z -= 0.015;
-            arm1_.GoToTarget(temp_pose);
-        }
+        // if (product_type == "piston_rod_part"){
+        //     temp_pose.position.z -= 0.02;
+        //     arm1_.GoToTarget(temp_pose);
+        // }
+        temp_pose.position.z -= 0.02;
+        arm1_.GoToTarget(temp_pose);
         bool failed_pick = arm1_.PickPartFromConv(temp_pose);
         ROS_WARN_STREAM("Picking up state " << failed_pick);
 
@@ -167,13 +167,6 @@ bool AriacOrderManager::PickAndPlaceFromConv(const std::pair<std::string,geometr
         arm1_.SendRobotHome(0);
         i++;
     }
-    // ros::Duration(0.5).sleep();
-    // while((!failed_pick)){
-
-        // failed_pick = arm1_.PickPartFromConv(part_pose);
-    // }
-
-    //--get the pose of the object in the tray from the order
     geometry_msgs::Pose drop_pose = product_type_pose.second;
 
     geometry_msgs::PoseStamped StampedPose_in,StampedPose_out;
