@@ -29,12 +29,14 @@ public:
     void GoToTarget(std::initializer_list<geometry_msgs::Pose> list);
     void GoToTarget(const geometry_msgs::Pose& pose);
     void SendRobotHome(int bin);
-    bool DropPart(geometry_msgs::Pose pose);
+    bool DropPart(geometry_msgs::Pose pose, bool change_orient);
     void GripperToggle(const bool& state);
     void GripperCallback(const osrf_gear::VacuumGripperState::ConstPtr& grip);
     void GripperStateCheck(geometry_msgs::Pose pose);
     bool PickPart(geometry_msgs::Pose& part_pose);
     bool PickPartFromConv(geometry_msgs::Pose& part_pose);
+
+    void ChangeOrientation(geometry_msgs::Quaternion orientation);
 
 private:
     ros::NodeHandle robot_controller_nh_;
@@ -60,6 +62,7 @@ private:
     bool plan_success_;
     std::vector<double> home_joint_pose_conv_;
     std::vector<double> home_joint_pose_bin_;
+    std::vector<double> home_joint_pose_kit1_;
     geometry_msgs::Pose home_cart_pose_;
     geometry_msgs::Quaternion fixed_orientation_;
     geometry_msgs::Pose agv_position_;
