@@ -61,6 +61,16 @@ public:
             return break_beam_2_trig_counter_;
     }
 
+    int get_faulty_parts_num(int id){
+        if (id == 1){
+            return faulty_parts_1_num_;
+        } else{
+            return faulty_parts_2_num_;
+        }
+
+
+    }
+
     // void reset();
 
 private:
@@ -95,5 +105,5 @@ private:
 
     bool init_, cam_1_, cam_2_,cam_3_, cam_4_, break_beam_1_, break_beam_2_;
     int camera1_frame_counter_, camera2_frame_counter_, camera3_frame_counter_, camera4_frame_counter_,
-        break_beam_1_trig_counter_, break_beam_2_trig_counter_;
+        break_beam_1_trig_counter_, break_beam_2_trig_counter_, faulty_parts_1_num_, faulty_parts_2_num_;
 };

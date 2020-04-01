@@ -31,6 +31,9 @@ AriacSensorManager::AriacSensorManager(){
     break_beam_1_trig_counter_ = 0;
     break_beam_2_trig_counter_ = 0;
 
+    faulty_parts_1_num_ = 0;
+    faulty_parts_2_num_ = 0;
+
     init_ = false;
     cam_1_ = false;
     cam_2_ = false;
@@ -81,7 +84,7 @@ void AriacSensorManager::LogicalCamera3Callback(const osrf_gear::LogicalCameraIm
 }
 
 void AriacSensorManager::LogicalCamera4Callback(const osrf_gear::LogicalCameraImage::ConstPtr & image_msg){
-    // if (init_) return;
+    // if (init_) return;   
     ROS_INFO_STREAM_THROTTLE(10,
                              "Logical camera 4: '" << image_msg->models.size() << "' objects.");
     if (image_msg->models.size() == 0)
@@ -97,7 +100,7 @@ void AriacSensorManager::QualitySensor1Callback(const osrf_gear::LogicalCameraIm
                              "Quality sensor 1: '" << image_msg->models.size() << "' objects.");
     if (image_msg->models.size() == 0)
         ROS_INFO_STREAM_THROTTLE(30,"Quality sensor 1 does not see anything");
-
+    faulty_parts_1_num_ = image_msg->models.size();
     quality_parts_1_ = *image_msg;
     this->BuildProductFrames(5);
 }
@@ -108,7 +111,7 @@ void AriacSensorManager::QualitySensor2Callback(const osrf_gear::LogicalCameraIm
                              "Quality sensor 2: '" << image_msg->models.size() << "' objects.");
     if (image_msg->models.size() == 0)
         ROS_INFO_STREAM_THROTTLE(30,"Quality sensor 2 does not see anything");
-
+    faulty_parts_2_num_ = image_msg->models.size();
     quality_parts_2_ = *image_msg;
     this->BuildProductFrames(6);
 }
@@ -236,9 +239,6 @@ void AriacSensorManager::breakBeam2Callback(const osrf_gear::Proximity::ConstPtr
     } else {
         break_beam_2_ = false;
     }
-    // else{
-        // ROS_ERROR_STREAM("Break not triggered");
-    // }
 }
 
 
