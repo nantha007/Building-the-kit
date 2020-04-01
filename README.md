@@ -1,9 +1,6 @@
 # Building the kit.
 
-# Left to do:
-
-- Need to develop the methods to do something when we have faulty parts in the kit.
-- The architecture documentation is needed to be made.
+The videos attached to show the working simulation one without faulty parts and other when gear part 12 is added as faulty part in yaml file. 
 
 ## Running the package:
 

@@ -80,7 +80,6 @@ std::string AriacOrderManager::PickAndPlace(const std::pair<std::string,geometry
         auto part_pose = camera_.GetPartPose("/world",product_frame);
         failed_pick = arm1_.PickPart(part_pose);
     }
-
     arm1_.SendRobotHome(2);
     //--get the pose of the object in the tray from the order
     geometry_msgs::Pose drop_pose = product_type_pose.second;
@@ -93,7 +92,7 @@ std::string AriacOrderManager::PickAndPlace(const std::pair<std::string,geometry
         ROS_INFO_STREAM("StampedPose_int (" << StampedPose_in.pose.position.x <<","<< StampedPose_in.pose.position.y << "," << StampedPose_in.pose.position.z<<")");
         part_tf_listener_.transformPose("/world",StampedPose_in,StampedPose_out);
         StampedPose_out.pose.position.z += 0.1;
-        // StampedPose_out.pose.position.y -= 0.2;
+        StampedPose_out.pose.position.y += 0.05;
         ROS_INFO_STREAM("StampedPose_out (" << StampedPose_out.pose.position.x <<","<< StampedPose_out.pose.position.y << "," << StampedPose_out.pose.position.z<<")");
 
     }
@@ -103,11 +102,14 @@ std::string AriacOrderManager::PickAndPlace(const std::pair<std::string,geometry
         //ROS_INFO_STREAM("StampedPose_in " << StampedPose_in.pose.position.x);
         part_tf_listener_.transformPose("/world",StampedPose_in,StampedPose_out);
         StampedPose_out.pose.position.z += 0.1;
-        // StampedPose_out.pose.position.y += 0.2;
+        StampedPose_out.pose.position.y -= 0.05;
         //ROS_INFO_STREAM("StampedPose_out " << StampedPose_out.pose.position.x);
     }
     // arm1_.ChangeOrientation(StampedPose_out.pose.orientation);
-
+    // StampedPose_out.pose.orientation.z = StampedPose_out.pose.orientation.z* StampedPose_out.pose.orientation.w+
+                                            // part_pose.orientation.z*part_pose.orientation.w ;
+    
+    
     auto result = arm1_.DropPart(StampedPose_out.pose, true);
     // ros::Duration(10.0).sleep();
 
@@ -298,7 +300,7 @@ bool AriacOrderManager::RemoveFailureParts(std::string product_part_frame, int s
         }
 
         part_pose.position.z += 0.3;
-        part_pose.position.y -= 1.0;
+        part_pose.position.y -= 0.8;
 
         auto result = arm1_.DropPart(part_pose, false);
 

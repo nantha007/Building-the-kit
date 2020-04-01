@@ -63,6 +63,7 @@ private:
     std::vector<double> home_joint_pose_conv_;
     std::vector<double> home_joint_pose_bin_;
     std::vector<double> home_joint_pose_kit1_;
+    std::vector<std::string> joint_names_;
     geometry_msgs::Pose home_cart_pose_;
     geometry_msgs::Quaternion fixed_orientation_;
     geometry_msgs::Pose agv_position_;

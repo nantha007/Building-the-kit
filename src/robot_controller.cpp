@@ -34,7 +34,9 @@ robot_move_group_(robot_controller_options) {
     //-- The joint positions for the home position to pick from the conveyer belt
     home_joint_pose_conv_ = {0, 3.27, -2.38, -1.76, -0.57, -4.70, 0};
 
-    home_joint_pose_kit1_ = {1.16, 1.51, -1.26, 1.88, 4.02, -1.51, 0};
+    joint_names_ = {"linear_arm_actuator_joint",  "shoulder_pan_joint", "shoulder_lift_joint", 
+    "elbow_joint", "wrist_1_joint", "wrist_2_joint", "wrist_3_joint"};
+    home_joint_pose_kit1_ = {1.16, 1.51, -1.26, 1.88, 4.02, -1.51, -2.03};
 
 
     //-- offset used for picking up parts
@@ -99,7 +101,7 @@ void RobotController::ChangeOrientation(geometry_msgs::Quaternion orientation){
     tf::quaternionMsgToTF(orientation,Q);
     tf::Matrix3x3(Q).getRPY(roll,pitch,yaw);
     ROS_INFO_STREAM(">>>>> Rotation :"<< yaw);
-    joint_values[6] = yaw;
+    joint_values[6] += yaw;
 
     robot_move_group_.setJointValueTarget(joint_values);
     
@@ -174,7 +176,11 @@ void RobotController::SendRobotHome(int bin) {
         robot_move_group_.setJointValueTarget(home_joint_pose_bin_);
     }
     else if (bin==2){
-        robot_move_group_.setJointValueTarget(home_joint_pose_kit1_);
+        unsigned int i = 0;
+        for (const auto &joint_name: joint_names_){
+            robot_move_group_.setJointValueTarget(joint_name, home_joint_pose_kit1_[i]);
+            i++;
+        }
     }
     else {
         robot_move_group_.setJointValueTarget(home_joint_pose_conv_);
